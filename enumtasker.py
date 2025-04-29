@@ -1,7 +1,10 @@
+#!/usr/bin/python3
+
+
 import os
 import subprocess
 
-targets_file = input("inserisi lal lista")
+targets_file = input("inserisi lal lista: ")
 print("sto facendo la cartella")
 loot_dir = "loot"
 if not os.path.exists(loot_dir):
@@ -9,7 +12,7 @@ if not os.path.exists(loot_dir):
 
 print("ho fatto la cartella")
 print("pingsweepin")
-subprocess.run(f"nmap -sn -iL{targets_file} -oG pinged.txt", shell=True)
+subprocess.run(f"nmap -sn -iL {targets_file} -oG pinged.txt", shell=True)
 
 ips = set()
 with open("pinged.txt","r") as f:
@@ -19,7 +22,7 @@ with open("pinged.txt","r") as f:
             if len(parts) >= 2:
                 ips.add(parts[1])
 #estrarrre
-with open("ips.txt") as f:
+with open("ips.txt","w") as f:
      for ip in sorted(ips):
         f.write(ip + "\n")
 
@@ -42,9 +45,9 @@ services = {
 }
 #ciclo sul dizionario lancia il comando per ognuno
 for name, port in services.items():
-    print(f"[*] Enumerating {name.upper()}...")
+    print(f"enumerando {name.upper()}...")
     output_file = os.path.join(loot_dir, f"{name}.txt")
     cmd = f"nmap -sV -p {port} --script 'not brute' -iL ips.txt -oN {output_file}"
     subprocess.run(cmd, shell=True)
 
-print("[*] Enumerazione completata.")
+print("enumerazione completata.")
